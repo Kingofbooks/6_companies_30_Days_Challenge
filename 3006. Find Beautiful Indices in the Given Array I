@@ -1,0 +1,86 @@
+3006. Find Beautiful Indices in the Given Array I
+Solved
+Medium
+Topics
+Companies
+Hint
+You are given a 0-indexed string s, a string a, a string b, and an integer k.
+
+An index i is beautiful if:
+
+0 <= i <= s.length - a.length
+s[i..(i + a.length - 1)] == a
+There exists an index j such that:
+0 <= j <= s.length - b.length
+s[j..(j + b.length - 1)] == b
+|j - i| <= k
+Return the array that contains beautiful indices in sorted order from smallest to largest.
+
+ 
+
+Example 1:
+
+Input: s = "isawsquirrelnearmysquirrelhouseohmy", a = "my", b = "squirrel", k = 15
+Output: [16,33]
+Explanation: There are 2 beautiful indices: [16,33].
+- The index 16 is beautiful as s[16..17] == "my" and there exists an index 4 with s[4..11] == "squirrel" and |16 - 4| <= 15.
+- The index 33 is beautiful as s[33..34] == "my" and there exists an index 18 with s[18..25] == "squirrel" and |33 - 18| <= 15.
+Thus we return [16,33] as the result.
+Example 2:
+
+Input: s = "abcd", a = "a", b = "a", k = 4
+Output: [0]
+Explanation: There is 1 beautiful index: [0].
+- The index 0 is beautiful as s[0..0] == "a" and there exists an index 0 with s[0..0] == "a" and |0 - 0| <= 4.
+Thus we return [0] as the result.
+ 
+
+Constraints:
+
+1 <= k <= s.length <= 105
+1 <= a.length, b.length <= 10
+s, a, and b contain only lowercase English letters.
+
+Seen this question in a real interview before?
+1/5
+Yes
+No
+Accepted
+30.9K
+Submissions
+82.6K
+Acceptance Rate
+37.5%
+Topics
+Companies
+Hint 1
+For each i, you can iterate over all js and determine if i is beautiful or not.
+
+ANSWER:
+class Solution {
+    public List<Integer> beautifulIndices(String s, String a, String b, int k) {
+        // List to store the result
+        List<Integer> result = new ArrayList<>();
+        // Find the first occurrences of strings 'a' and 'b' in 's'
+        int a_pos = s.indexOf(a); 
+        int b_pos = s.indexOf(b);
+        // Loop until we run out of occurrences for either 'a' or 'b'
+        while (a_pos >= 0 && b_pos >= 0) {
+            // If the distance between positions is within the allowed range (<= k)
+            if (Math.abs(a_pos - b_pos) <= k) {
+                result.add(a_pos); // Add the index of 'a' to the result
+                a_pos = s.indexOf(a, a_pos + 1); // Move to the next occurrence of 'a'
+            } 
+            // If the position of 'b' is less than 'a', move to the next occurrence of 'b'
+            else if (b_pos < a_pos) {
+                b_pos = s.indexOf(b, b_pos + 1);
+            } 
+            // Otherwise, move to the next occurrence of 'a' and reset 'b' position
+            else {
+                a_pos = s.indexOf(a, a_pos + 1);
+                b_pos = s.indexOf(b);
+            }
+        }
+        return result; // Return the list of beautiful indices
+    }
+}
